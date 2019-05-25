@@ -1,0 +1,184 @@
+<!doctype html>
+<html class="no-js" lang="fa" dir="rtl">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پیاده سازی Linear Regression در Julia | مرجع فارسی زبان برنامه نویسی Julia</title>
+    <link rel="stylesheet" href="/assets/css/fontface.css">
+    <link rel="stylesheet" href="/assets/css/app.css">
+    <link rel="stylesheet" href="/assets/css/prism.css">
+    <script type="text/javascript" async
+      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+  </head>
+  <body>
+    <!-- Navigation Start -->
+    <div class="title-bar" data-responsive-toggle="example-menu" data-hide-for="medium">
+    <button class="menu-icon" type="button" data-toggle="example-menu"></button>
+    <div class="title-bar-title">فهرست</div>
+  </div>
+
+  <div class="top-bar" id="example-menu">
+    <div class="top-bar-left">
+      <ul class="dropdown menu" data-dropdown-menu>
+        <li class="menu-text"><a class="brand" href="/"><img src="/assets/img/juliaIR-149-84.png" width="50px" alt=""></a></li>
+
+        <li><a href="/tutorials">آموزش Julia</a></li>
+        <li><a href="/examples">مثال های کاربردی</a></li>
+        <li><a href="/#about-us">درباره‌‌ی ما</a></li>
+      </ul>
+    </div>
+    <div class="top-bar-right">
+
+    </div>
+  </div>
+    <!-- Navifation End -->
+    <!-- Contents Start -->
+    <div class="grid-container">
+<div class="details grid-x">
+<div class="cell">
+  <h1 class="text-center">پیاده سازی Linear Regression در Julia</h1>
+  <p class="text-center">نویسنده :‌ امیرعباس اسدی ‌</p>
+</div>
+</div>
+<div class="tutorial-body grid-x align-center">
+<div class="cell medium-9">
+  <h2 id="توضیح-مسئله">توضیح مسئله</h2>
+<p>در این مطلب قصد داریم یکی از مدل های ساده اما کارآمد یادگیری ماشین را برای پیشبینی پیاده سازی کنیم. با رجوع به این <a href="http://college.cengage.com/mathematics/brase/understandable_statistics/7e/students/datasets/slr/frames/frame.html">لینک</a> می توانید یک دیتاست حاوی اطلاعات کانگورو های خاکستری را دانلود کنید. این داده ها حاوی دو ستون X و Y است. این دو متغیر به ترتیب نشان دهنده‌ی طول و عرض بینی کانگورو ها به میلی متر هستند.این فایل حاوی داده های مذکور برای ۴۵ کانگورو است. هدف ما در این مثال کشف یک رابطه‌ی خطی بین Y و X است. با کشف این رابطه می توانیم عرض بینی این کانگورو ها را بر اساس طولش پیشبینی کنیم.</p>
+<h2 id="بررسی-وجود-یک-رابطهی-خطی">بررسی وجود یک رابطه‌ی خطی</h2>
+<p>اولین پرسشی که مطرح می شود این است که اصلا Linear Regression برای این داده ها قابل استفاده است؟ برای پاسخ به این پرسش لازم است بررسی کنیم که آیا رابطه ای خطی بین X و Y وجود دارد یا نه.یک روش برای بررسی این موضوع رسم نمودار پراکندگی X و Y است.ابتدا دیتاست را دانلود و برای استفاده آسانتر آن را در قالب csv ذخیره میکنیم.یکی از پکیج های Julia که کار با داده ها را تسهیل می کند <a href="https://juliadata.github.io/DataFrames.jl/stable/man/getting_started.html">DataFrames</a> است.همچنین برای خواندن فایل دیتاست که از نوع CSV است از پکیج CSV استفاده می کنیم.ابتدا این پکیج ها را نصب میکنیم:</p>
+<pre><code class="language-julia">using Pkg
+Pkg.add("DataFrames")
+Pkg.add("CSV")
+</code></pre>
+<p>با استفاده از پکیج CSV فایل دیتاست را فراخوانی می کنیم:</p>
+<pre><code class="language-julia">using CSV
+data = CSV.read("dataset.csv")
+</code></pre>
+<p>در کد بالا ورودی تابع <code class="highlighter-rouge">read</code> نام فایل دیتاست است.خروجی این تابع از نوع <code class="highlighter-rouge">DataFrame</code> است.اگر با استفاده از تابع <code class="highlighter-rouge">print</code> متغیر <code class="highlighter-rouge">data</code> را چاپ منیم نتیجه به صورت زیر خواهد بود:</p>
+<pre><code class="language-julia">print(data)</code></pre>
+<pre><code class="language-julia">45×2 DataFrames.DataFrame
+│ Row │ X     │ Y     │
+│     │ Int64 │ Int64 │
+├─────┼───────┼───────┤
+│ 1   │ 609   │ 241   │
+│ 2   │ 629   │ 222   │
+│ 3   │ 620   │ 233   │
+│ 4   │ 564   │ 207   │
+│ 5   │ 645   │ 247   │
+│ 6   │ 493   │ 189   │
+│ 7   │ 606   │ 226   │
+│ 8   │ 660   │ 240   │
+│ 9   │ 630   │ 215   │
+│ 10  │ 672   │ 231   │
+│ 11  │ 778   │ 263   │
+│ 12  │ 616   │ 220   │
+│ 13  │ 727   │ 271   │
+│ 14  │ 810   │ 284   │
+│ 15  │ 778   │ 279   │
+│ 16  │ 823   │ 272   │
+│ 17  │ 755   │ 268   │
+│ 18  │ 710   │ 278   │
+│ 19  │ 701   │ 238   │
+│ 20  │ 803   │ 255   │
+│ 21  │ 855   │ 308   │
+│ 22  │ 838   │ 281   │
+│ 23  │ 830   │ 288   │
+│ 24  │ 864   │ 306   │
+│ 25  │ 635   │ 236   │
+│ 26  │ 565   │ 204   │
+│ 27  │ 562   │ 216   │
+│ 28  │ 580   │ 225   │
+│ 29  │ 596   │ 220   │
+│ 30  │ 597   │ 219   │
+│ 31  │ 636   │ 201   │
+│ 32  │ 559   │ 213   │
+│ 33  │ 615   │ 228   │
+│ 34  │ 740   │ 234   │
+│ 35  │ 677   │ 237   │
+│ 36  │ 675   │ 217   │
+│ 37  │ 629   │ 211   │
+│ 38  │ 692   │ 238   │
+│ 39  │ 710   │ 221   │
+│ 40  │ 730   │ 281   │
+│ 41  │ 763   │ 292   │
+│ 42  │ 686   │ 251   │
+│ 43  │ 717   │ 231   │
+│ 44  │ 737   │ 275   │
+│ 45  │ 816   │ 275   │</code></pre>
+<p>برای دسترسی به ستون های این دیتاست می توانیم از <code class="highlighter-rouge">data.X</code> یا <code class="highlighter-rouge">data.Y</code> استفاده کنیم که خروجی آن ها از نوع آرایه های زبان Julia است. برای رسم نمودار در Julia میتوانیم از پکیج <a href="http://docs.juliaplots.org/latest/">Plots</a> استفاده کنیم. این پکیج  از تعدادی پکیج دیگر به عنوان Backend برای رسم نمودار استفاده کند. ابتدا این پکیج و plotly را به عنوان Backend برای رسم نمودار نصب می کنیم:</p>
+<pre><code class="language-julia">Pkg.add("Plots")
+Pkg.add("PyPlot")</code></pre>
+<p>اکنون این پکیج را فراخوانی و plotly را بعنوان Backend رسم نمودار انتخاب میکنیم:</p>
+<pre><code class="language-julia">using Plots
+pyplot(size = (300,300), legend = false)</code></pre>
+
+<p>اکنون با استفاده از تابع <code class="highlighter-rouge">scatter</code> نمودار پراکندگی X و Y را رسم میکنیم:</p>
+<pre><code class="language-julia">scatter(data.X, data.Y)</code></pre>
+<p>نتیجه به صورت زیر خواهد بود:
+<img src="/images/linear-regression-plot0.png" alt="نمودار پراکندگی رسم شده" />
+از شکل بالا می توان گفت مدل کردن رابطه‌ی بین X و Y غیرمنطقی نیست. البته می توانیم قیق تر باشیم. به عنوان یک روش دیگر برای بررسی همبستگی خطی، از کتابخانه <a href="https://docs.julialang.org/en/v1/stdlib/Statistics/index.html">Statistics</a> برای محاسبه ماتریس همبستگی استفاده میکنیم.Statistics جز Standard Library زبان Julia بوده و نیازی به نصب ندارد.برای محاسبه ماتریس همبستگی به این شیوه عمل می کنیم:</p>
+<pre><code class="language-julia">using Statistics
+cor(hcat(data.X, data.Y))</code></pre>
+<p>در کدبالا تابع <code class="highlighter-rouge">hcat</code> دو ماتریس <code class="highlighter-rouge">data.X</code> و <code class="highlighter-rouge">data.Y</code> را به یکدیگر متصل می کند. تابع <code class="highlighter-rouge">cor</code> ماتریس همبستگی را محاسبه می کند.نتیجه بدین صورت خواهد بود:</p>
+<pre><code class="language-julia">2×2 Array{Float64,2}:
+ 1.0       0.881414
+ 0.881414  1.0     </code></pre>
+<p>ضریب همبستگی <code class="highlighter-rouge">0.881414</code> هم نشان می دهد استفاده از Linear Regression فکر بدی نیست.</p>
+<h2 id="محاسبه-ضرایب-linear-regression">محاسبه ضرایب Linear Regression</h2>
+<p>اکنون که به این نتیجه رسیدیم رابطه‌ی بین X و Y را با یک خط تخمین بزیم، بایستی این خط را بدست آوریم.به عبارت دیگر هدف ما محاسبه پارامتر های این خط است.</p>
+
+<script type="math/tex; mode=display">y \sim p_1 + p_2x</script>
+
+<p>می توانیم این مسئله را در قالب یه معادله‌ی ماتریسی بیان کنیم:</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{bmatrix}1 & x_1\\1 & x_2\\1 & x_3\\... & ...\\1 & x_n\end{bmatrix}\begin{bmatrix}p_1\\p_2\end{bmatrix} = \begin{bmatrix}y_1\\y_2\\y_3\\...\\y_n\end{bmatrix} %]]></script>
+
+<p>ماتریس های بالا را به اختصار بدین صورت نام گذاری می کنیم:</p>
+
+<script type="math/tex; mode=display">Ap = y</script>
+
+<p>هدف محاسبه‌ی بردار <script type="math/tex">p</script> است.می توان نشان داد پاسخ خوبی برای این معادله به صورت زیر محاسبه می گردد:</p>
+
+<script type="math/tex; mode=display">p = (A^TA)^{-1}A^Ty</script>
+
+<p>ابتدا ماتریس <script type="math/tex">A</script> را محاسبه می کنیم.ستون اول این ماتریس <script type="math/tex">1</script> است.میتوانیم با استفاده از تابع <code class="highlighter-rouge">hcat</code> یک بردار <script type="math/tex">1</script> با 45 عنصر را به صورت افقی به ماتریس <code class="highlighter-rouge">data.X</code> الحاق کنیم.</p>
+<pre><code class="language-julia">A = hcat(ones(length(data.X), 1), data.X)</code></pre>
+
+<p>برای محاسبه‌ی ترانهاده و وارون ماتریس از کتابخانه <a href="https://docs.julialang.org/en/v1/stdlib/LinearAlgebra/">LinearAlgebra</a> استفاده می کنیم. این کتابخانه هم جزیی از Standard Library زبان جولیا است.</p>
+<pre><code class="language-julia">using LinearAlgebra
+AT = transpose(A)
+p = inv(AT*A)*AT*data.Y</code></pre>
+<p>بعد از اجرای این کد، بردار <script type="math/tex">p</script> به صورت زیر بدست می آید:</p>
+<pre><code class="language-julia">2-element Array{Float64,1}:
+ 46.45081362636087 
+  0.2876123682414831</code></pre>
+<h2 id="رسم-خط-بدست-آمده">رسم خط بدست آمده</h2>
+<p>حال که پارامتر های خط مورد نظر را بدست آوردیم، می توانیم آن را رسم کنیم. توجه کنید که <script type="math/tex">Ap</script> نشان دهنده‌ی مقادیر پیش بینی شده توسط این مدل برای داده های دیتاست است.می توانیم برای رسم خط از تابع <code class="highlighter-rouge">plot</code> استفاده کنیم. اما این تابع نمودار را از نو رسم می کند.به جای آن می توانیم از تابع <code class="highlighter-rouge">plot!</code> استفاده کنیم.این تابع نمودار را بر روی نمودار قبلی رسم می کند.</p>
+<pre><code class="language-julia">scatter(data.X, data.Y)
+plot!(data.X, A*p)</code></pre>
+<p>در نهایت خواهیم داشت:
+<img src="/images/linear-regression-plot1.png" alt="خط برازش شده بر روی داده ها" /></p>
+
+</div>
+</div>
+</div>
+<!-- Contents End -->
+
+    <!-- Contents End -->
+    <!-- Footer Start -->
+    <div class="grid-x grid-padding-x footer">
+      <div class="cell small-12">
+        <p class="text-center">مرجع فارسی زبان برنامه نویسی Julia</p>
+        <p class="text-center">هسته‌ی علمی یادگیری ماشین دانشگاه بوعلی سینا</p>
+      </div>
+    </div>
+    <!-- Footer End -->
+    <script src="/assets/js/jquery.min.js"></script>
+    <script src="/assets/js/what-input.min.js"></script>
+    <script src="/assets/js/foundation.min.js"></script>
+    <script src="/assets/js/app.js"></script>
+    <script src="/assets/js/prism.js"></script>
+  </body>
+</html>
