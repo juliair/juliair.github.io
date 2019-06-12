@@ -1,0 +1,129 @@
+<!doctype html>
+<html class="no-js" lang="fa" dir="rtl">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>شروع کار با Julia | مرجع فارسی زبان برنامه نویسی Julia</title>
+    <link rel="stylesheet" href="/assets/css/fontface.css">
+    <link rel="stylesheet" href="/assets/css/app.css">
+    <link rel="stylesheet" href="/assets/css/prism.css">
+    <script type="text/javascript" async
+      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+  </head>
+  <body>
+    <!-- Navigation Start -->
+    <div class="title-bar" data-responsive-toggle="example-menu" data-hide-for="medium">
+    <button class="menu-icon" type="button" data-toggle="example-menu"></button>
+    <div class="title-bar-title">فهرست</div>
+  </div>
+
+  <div class="top-bar" id="example-menu">
+    <div class="top-bar-left">
+      <ul class="dropdown menu" data-dropdown-menu>
+        <li class="menu-text"><a class="brand" href="/"><img src="/assets/img/juliaIR-149-84.png" width="50px" alt=""></a></li>
+
+        <li><a href="/tutorials">آموزش Julia</a></li>
+        <li><a href="/examples">مثال های کاربردی</a></li>
+        <li><a href="/#about-us">درباره‌‌ی ما</a></li>
+      </ul>
+    </div>
+    <div class="top-bar-right">
+
+    </div>
+  </div>
+    <!-- Navifation End -->
+    <!-- Contents Start -->
+    <div class="grid-container">
+<div class="details grid-x">
+<div class="cell">
+  <h1 class="text-center">شروع کار با Julia</h1>
+  <p class="text-center">نویسنده :‌ امیرعباس اسدی ‌</p>
+</div>
+</div>
+<div class="tutorial-body grid-x align-center">
+<div class="cell medium-9">
+  <p>برای نصب جولیا می توانید از فایل های باینری از قبل کامپایل شده یا سورس آن استفاده کنید که در هر دو صورت، روند سر راستی دارد.برای دانلود و نصب زبان Julia به <a href="https://julialang.org/downloads/">این لینک</a> مراجعه کنید.<br />
+آسان ترین راه امتحان و یادگیری زبان جولیا استفاده از یک Interactive Session است که به عنوان REPL هم شناخته می شود.می توانید آن را با اجرای فایل اجرایی جولیا و یا تایپ دستور <code class="highlighter-rouge">julia</code> در command line اجرا کنید.محیط Interactive Session به این شکل است:</p>
+<pre>
+<code class="language-julia">
+
+$ julia
+
+               _
+   _       _ _(_)_     |  Documentation: https://docs.julialang.org
+  (_)     | (_) (_)    |
+   _ _   _| |_  __ _   |  Type "?" for help, "]?" for Pkg help.
+  | | | | | | |/ _` |  |
+  | | |_| | | | (_| |  |  Version 1.1.1 (2019-05-16)
+ _/ |\__'_|_|_|\__'_|  |  
+|__/                   |
+
+
+julia&gt; 1 + 2
+3
+
+julia&gt; ans
+3
+</code>
+</pre>
+<p>برای خروج از Interactive Session می توانید دستور <code class="highlighter-rouge">exit()</code> را تایپ کرده و یا از ترکیب <code class="highlighter-rouge">Ctr-D</code> استفاده کنید.<br />
+در این حالت جولیا منتظر دریافت ورودی از کاربر است. زمانی که کاربر عبارتی مانند <code class="highlighter-rouge">1 + 2</code> را نوشته و کلید <code class="highlighter-rouge">enter</code> را فشار دهد، Interactive Session مقدار آن را محاسبه و نمایش می دهد. اگر عبارت وارد شده با <code class="highlighter-rouge">;</code> تمام شود، نتیجه آن عبارت نمایش داده نمی شود. متغیر <code class="highlighter-rouge">ans</code> همیشه حاوی مقدار آخرین عبارت اجرا شده است(حتی اگر آن عبارت با <code class="highlighter-rouge">;</code> تمام شده باشد).متغیر <code class="highlighter-rouge">ans</code> تنها در حالت Interctive Session قابل دسترسی بوده و هنگام اجرای جولیا با روش های دیگر، قابل استفاده نمی باشد.<br />
+برای اجرای دستورت نوشته شده در یک فایل مثلا <code class="highlighter-rouge">file.jl</code> می توانید بنویسید:</p>
+<pre>
+<code class="language-julia">
+include("file.jl")
+</code>
+</pre>
+<p>برای اجرای کد یک فایل بدون استفاده از Interactive Session می توانید نام آن فایل را به عنوان ورودی به دستور <code class="highlighter-rouge">julia</code> بدهید:</p>
+<pre>
+<code class="language-bash">
+julia script.jl arg1 arg2...
+</code>
+</pre>
+<p>ورودی های داده شده در دستور بالا به عنوان command line arguments به <code class="highlighter-rouge">script.jl</code> داده شده و از طریق global constant <code class="highlighter-rouge">ARGS</code> قابل دسترسی هستند.نام فایل هم در یک ثابت به نام <code class="highlighter-rouge">PROGRAM_FILE</code> ذخیره خواهد شد.دستور <code class="highlighter-rouge">julia</code> می تواند مقدار یک عبارت را با تنظیم <code class="highlighter-rouge">-e</code> بدون اجرای Interactive Session نمایش دهد.در اینصورت ثابت <code class="highlighter-rouge">ARGS</code> قابل استفاده ولی ثابت <code class="highlighter-rouge">PROGRAM_FILE</code> خالی است.برای مثال دستور زیر ورودی های command line را نمایش خواهد داد:</p>
+<pre>
+<code class="language-bash">
+julia -e 'println(PROGRAM_FILE); for x in ARGS; println(x); end' foo bar
+
+foo
+bar
+</code>
+</pre>
+<p>جولیا را می توان با استفاده از <code class="highlighter-rouge">-p</code> و یا <code class="highlighter-rouge">--machine-file</code> در حالت parallel اجرا کرد. تنظیم <code class="highlighter-rouge">-p n</code> به تعداد <code class="highlighter-rouge">n</code> worker process  برای اجرای جولیا، اجرا می کند. امادستور:</p>
+<pre>
+<code class="language-bash">
+julia --machine-file file
+</code>
+</pre>
+<p>برای هر ماشین تعریف شده در <code class="highlighter-rouge">file</code> یک worker ایجاد می کند. با هر یک از این ماشین ها باید بتوان از طریق یک ارتباط بدون password از نوع ssh ازتباط برقرار کرد و به علاوه در هر یک از آن ها زبان julia باید در مسیر مشابه با کامپیوتری که این فرمان را در آن اجرا می کنیم نصب شده باشد.در هر خط باید یک دستگاه به صورت زیر تعریف شده باشد:</p>
+<pre>
+<code class="language-bash">
+[count*][user@]host[:port] [bind_addr[:port]]
+</code>
+</pre>
+<p>مقدار پیشفرض <code class="highlighter-rouge">user</code> برابر با user است که از آن در حال استفاده اید.مقدار پیشفرض <code class="highlighter-rouge">port</code> برابر با پورت استاندارد <code class="highlighter-rouge">ssh</code> است.<code class="highlighter-rouge">count</code> نشان دهنده تعداد worker هایی که میخواهیم روی دستگاه مورد نظر اجرا شود و به طور پیشفرض برابر با 1 است.تنظیم <code class="highlighter-rouge">bind_addr[:port]</code> که نوشتن آن اختیاری است، آدرس IP که دیگر worker ها بتوانند با استفاده از آن به این worker متصل شوند را مشخص می کند.</p>
+
+<p>در صورتی که کدی دارید که می خواهید با هر بار اجرای Interactive Session اجرا شود، می توانید آن را در فایل <code class="highlighter-rouge">~/.julia/config/startup.jl</code> بنویسید.</p>
+
+</div>
+</div>
+</div>
+<!-- Contents End -->
+
+    <!-- Contents End -->
+    <!-- Footer Start -->
+    <div class="grid-x grid-padding-x footer">
+      <div class="cell small-12">
+        <p class="text-center">مرجع فارسی زبان برنامه نویسی Julia</p>
+        <p class="text-center">هسته‌ی علمی یادگیری ماشین دانشگاه بوعلی سینا</p>
+      </div>
+    </div>
+    <!-- Footer End -->
+    <script src="/assets/js/jquery.min.js"></script>
+    <script src="/assets/js/what-input.min.js"></script>
+    <script src="/assets/js/foundation.min.js"></script>
+    <script src="/assets/js/app.js"></script>
+    <script src="/assets/js/prism.js"></script>
+  </body>
+</html>
