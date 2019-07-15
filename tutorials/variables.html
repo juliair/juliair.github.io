@@ -1,0 +1,181 @@
+<!doctype html>
+<html class="no-js" lang="fa" dir="rtl">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متغیر ها در Julia | مرجع فارسی زبان برنامه نویسی Julia</title>
+    <link rel="stylesheet" href="/assets/css/fontface.css">
+    <link rel="stylesheet" href="/assets/css/app.css">
+    <link rel="stylesheet" href="/assets/css/prism.css">
+    <script type="text/javascript" async
+      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+  </head>
+  <body>
+    <!-- Navigation Start -->
+    <div class="title-bar" data-responsive-toggle="example-menu" data-hide-for="medium">
+    <button class="menu-icon" type="button" data-toggle="example-menu"></button>
+    <div class="title-bar-title">فهرست</div>
+  </div>
+
+  <div class="top-bar" id="example-menu">
+    <div class="top-bar-left">
+      <ul class="dropdown menu" data-dropdown-menu>
+        <li class="menu-text"><a class="brand" href="/"><img src="/assets/img/juliaIR-149-84.png" width="50px" alt=""></a></li>
+
+        <li><a href="/tutorials">آموزش Julia</a></li>
+        <li><a href="/examples">مثال های کاربردی</a></li>
+        <li><a href="/#about-us">درباره‌‌ی ما</a></li>
+      </ul>
+    </div>
+    <div class="top-bar-right">
+
+    </div>
+  </div>
+    <!-- Navifation End -->
+    <!-- Contents Start -->
+    <div class="grid-container">
+<div class="details grid-x">
+<div class="cell">
+  <h1 class="text-center">متغیر ها در Julia</h1>
+  <p class="text-center">نویسنده یا مترجم :‌ امیرعباس اسدی ‌</p>
+</div>
+</div>
+<div class="tutorial-body grid-x align-center">
+<div class="cell medium-9">
+  <p>یک متغیر، در حقیقت یک نام مرتبط با یک مقدار است و هنگامی مفید است که لازم باشد مقداری را برای استفاده های بعدی ذخیره کنید. برای مثال:</p>
+<pre>
+<code class="language-julia">
+# انتساب مقدار 10 به یک متغیر
+julia&gt; x = 10
+10
+
+# انجام عملیات ساده ریاضی
+julia&gt; x + 1
+11
+
+# عوض کردن مقدار متغیر
+julia&gt; x = 1 + 1
+2
+
+# انتساب انواع دیگر مقدار مثل رشته
+julia&gt; x = "Hello World!"
+"Hello World!"
+</code>
+</pre>
+
+<p>قواعد جولیا برای نام گذاری متغیر ها بسیار منعطف هستند.نام متغیر ها حساس به حروف کوچک و بزرگ نیست.</p>
+<pre>
+<code class="language-julia">
+julia&gt; x = 1.0
+1.0
+
+julia&gt; y = -3
+-3
+
+julia&gt; Z = "My string"
+"My string"
+
+julia&gt; customary_phrase = "Hello world!"
+"Hello world!"
+
+julia&gt; UniversalDeclarationOfHumanRightsStart = "人人生而自由，在尊严和权利上一律平等。"
+"人人生而自由，在尊严和权利上一律平等。"
+
+julia&gt; APerisianStatement = "مرجع فارسی زبان جولیا"
+"مرجع فارسی زبان جولیا"
+
+
+</code>
+</pre>
+<p>برای نام گذاری متغیر ها می توان از تمام کاراکتر های یونیکد (UTF-8) استفاده کرد:</p>
+<pre>
+<code class="language-julia">
+julia&gt; Ψ = 3.14
+3.14
+julia&gt; مجموع = 52445
+52445
+julia&gt; 안녕하세요 = "Hello"
+"Hello"
+</code>
+</pre>
+<p>در محیط REPL می توانید با تایپ یک Backslash و سپس نام LaTeX یک نماد و فشردن Tab آن را تایپ کنید. مثلا <code class="highlighter-rouge">\delta</code> یا <code class="highlighter-rouge">\gamma</code> و …. حتی می توانید نمادی مانند <script type="math/tex">\beta_2^3</script> را با ترکیب زیر تایپ کنید:</p>
+<pre>
+<code class="language-julia">
+\beta-tab-\_2-tab-\^3-tab
+</code>
+</pre>
+<p>همچنین اگر متغیری را جایی دیدید و خواستید بدانید که دستور تایپ آن چیست کافی است در REPL یک ؟ گذاشته و سپس کاراکتر موردنظر را آن جا paste کنید.<br />
+جولیا همچنین اجازه می دهد ثابت ها  و توابع built-in آن را هم تعریف کنید(هر چند که این کار توصیه نمی شود).</p>
+<pre>
+<code class="language-julia">
+julia&gt; pi = 3
+3
+
+julia&gt; pi
+3
+
+julia&gt; sqrt = 4
+4
+</code>
+</pre>
+<p>البته اگر این ثابت ها یا توابع در حال استفاده باشند در صورت باز تعریف با خطا مواجه خواهید شد:</p>
+<pre>
+<code class="language-julia">
+julia&gt; pi
+π = 3.1415926535897...
+
+julia&gt; pi = 3
+ERROR: cannot assign variable MathConstants.pi from module Main
+
+julia&gt; sqrt(100)
+10.0
+
+julia&gt; sqrt = 4
+ERROR: cannot assign variable Base.sqrt from module Main
+</code>
+</pre>
+<h2 id="اسامی-مجاز-برای-متغیر-ها">اسامی مجاز برای متغیر ها</h2>
+<p>اسامی متغیر ها باید با یک حرف (a-z , A-Z) یا <code class="highlighter-rouge">_</code> یا مجموعه کاراکتر های یونیکد بزرگتر از 00A0 آغار شود. باقی حروف اسم می توانند شامل <code class="highlighter-rouge">!</code> و ارقام و دیگر کاراکتر های یونیکد باشد. از نام دستورات  built-in نمی تواند به عنوان نام متغیر استفاده کرد:</p>
+<pre>
+<code class="language-julia">
+julia&gt; else = false
+ERROR: syntax: unexpected "else"
+
+julia&gt; try = "No"
+ERROR: syntax: unexpected "="
+</code>
+</pre>
+<h2 id="قرارداد-های-نام-گذاری">قرارداد های نام گذاری</h2>
+<p>علی رغم اینکه جولیا سخت گیری چندانی در مورد نام متغیر ها ندارد، بهتر است به منظور یکدست و استاندارد شدن برنامه های نوشته شده در نام گذاری آن ها از قواعد و قرارداد های زیر تبعیت کنید:</p>
+<ul>
+  <li>نام متغیر ها با حروف کوچک باشد.</li>
+  <li>جداسازی کلمات می تواند با <code class="highlighter-rouge">_</code> انجام شود، اما بهتر است از استفاده از آن اجتناب کرد مگر اینکه بدون آن نام متغیر خوانا نباشد.</li>
+  <li>نام <code class="highlighter-rouge">Type</code> ها و <code class="highlighter-rouge">Module</code> ها باید با یک حرف بزرگ آغاز شده و به جای استفاده از <code class="highlighter-rouge">_</code> جداسازی کلمات به شیوه Camel Case انجام شود.</li>
+  <li>نام توابع و ماکرو ها باید متشکل از حروف کوچک و بدون <code class="highlighter-rouge">_</code> باشد.</li>
+  <li>نام توابعی که ورودی خود را عوض می کنند باید با <code class="highlighter-rouge">!</code> پایان یابد. این توابع گاهی اوقات mutating و یا in-place نامیده می شوند چرا که علاوه بر بازگرداندن یک مقدار،‌ ورودی های خود را هم عوض می کنند.</li>
+</ul>
+
+<p>برای کسب اطلاعات بیشتر در مورد قواعد و قرارداد های مربوط به ظاهر کدنویسی به <a href="https://docs.julialang.org/en/v1/manual/style-guide/#Style-Guide-1">این</a> صفحه مراجعه کنید.</p>
+
+</div>
+</div>
+</div>
+<!-- Contents End -->
+
+    <!-- Contents End -->
+    <!-- Footer Start -->
+    <div class="grid-x grid-padding-x footer">
+      <div class="cell small-12">
+        <p class="text-center">مرجع فارسی زبان برنامه نویسی Julia</p>
+        <p class="text-center">هسته‌ی علمی یادگیری ماشین دانشگاه بوعلی سینا</p>
+      </div>
+    </div>
+    <!-- Footer End -->
+    <script src="/assets/js/jquery.min.js"></script>
+    <script src="/assets/js/what-input.min.js"></script>
+    <script src="/assets/js/foundation.min.js"></script>
+    <script src="/assets/js/app.js"></script>
+    <script src="/assets/js/prism.js"></script>
+  </body>
+</html>
